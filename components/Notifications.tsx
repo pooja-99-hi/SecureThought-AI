@@ -1,6 +1,6 @@
 import React from 'react';
 import { Bell, AlertTriangle, CheckCircle, Info, X } from 'lucide-react';
-import { Threat } from '../types';
+import { Threat, Severity } from '../types';
 
 interface NotificationsProps {
   isOpen: boolean;
@@ -8,11 +8,15 @@ interface NotificationsProps {
   threats: Threat[];
 }
 
+type NotificationItem = 
+  | { id: string; type: 'system'; title: string; time: string; status: string }
+  | { id: string; type: 'threat'; title: string; time: string; severity: Severity };
+
 export const Notifications: React.FC<NotificationsProps> = ({ isOpen, onClose, threats }) => {
   if (!isOpen) return null;
 
   // Generate some mock system notifications mixed with threats
-  const notifications = [
+  const notifications: NotificationItem[] = [
     {
       id: 'sys-1',
       type: 'system',
@@ -22,7 +26,7 @@ export const Notifications: React.FC<NotificationsProps> = ({ isOpen, onClose, t
     },
     ...threats.slice(0, 4).map(t => ({
       id: t.id,
-      type: 'threat',
+      type: 'threat' as const,
       title: `Threat Detected: ${t.type}`,
       time: '2 mins ago',
       severity: t.severity

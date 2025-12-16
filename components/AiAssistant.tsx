@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageSquare, X, Send, Bot, Sparkles, Loader2, Shield, Mic, MicOff, Download, Zap } from 'lucide-react';
+import { MessageSquare, X, Send, Bot, Sparkles, Loader2, Shield, Mic, MicOff, Download, Zap, Database } from 'lucide-react';
 import { chatWithCipher } from '../services/ai';
 import { ChatMessage } from '../types';
 
@@ -9,7 +9,7 @@ export const AiAssistant = () => {
     {
       id: 'init',
       role: 'model',
-      text: "Greetings. I am Cipher, your Encrypted Intelligence Analyst. How can I assist with your threat hunting today?",
+      text: "CyborgDB Neural Interface Online. Secure Channel Established. Awaiting command.",
       timestamp: new Date()
     }
   ]);
@@ -20,10 +20,10 @@ export const AiAssistant = () => {
   const recognitionRef = useRef<any>(null);
 
   const EXAMPLE_PROMPTS = [
-    "Analyze the top critical threats detected today.",
-    "Explain how CyborgDB protects data in memory.",
-    "Draft a mitigation plan for the recent ransomware alerts.",
-    "What is the current security score trend?"
+    "Scan for critical anomalies in the CyborgDB index.",
+    "How does CyborgDB prevent memory dump attacks?",
+    "Generate a remediation plan for recent vector alerts.",
+    "Export encrypted audit logs."
   ];
 
   const scrollToBottom = () => {
@@ -66,7 +66,6 @@ export const AiAssistant = () => {
   const speak = (text: string) => {
     if ('speechSynthesis' in window) {
       const utterance = new SpeechSynthesisUtterance(text);
-      // Try to find a robotic or tech-sounding voice
       const voices = window.speechSynthesis.getVoices();
       const techVoice = voices.find(v => v.name.includes('Google US English') || v.name.includes('Samantha'));
       if (techVoice) utterance.voice = techVoice;
@@ -82,7 +81,7 @@ export const AiAssistant = () => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `securethought-transcript-${Date.now()}.txt`;
+    a.download = `cyborgdb-transcript-${Date.now()}.txt`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -104,7 +103,6 @@ export const AiAssistant = () => {
     setInput('');
     setIsTyping(true);
 
-    // Prepare history for API
     const history = messages.map(m => ({
       role: m.role,
       parts: [{ text: m.text }]
@@ -115,25 +113,24 @@ export const AiAssistant = () => {
     const botMsg: ChatMessage = {
       id: (Date.now() + 1).toString(),
       role: 'model',
-      text: responseText || "System malfunction.",
+      text: responseText || "CyborgDB connection interrupted.",
       timestamp: new Date()
     };
 
     setMessages(prev => [...prev, botMsg]);
     setIsTyping(false);
-    speak(botMsg.text); // Speak the response
+    speak(botMsg.text);
   };
 
   return (
     <>
-      {/* Trigger Button */}
       <button
         onClick={() => setIsOpen(true)}
         className={`fixed bottom-6 right-6 z-50 p-4 rounded-full shadow-lg border border-cyber-primary/50 transition-all duration-300 group
           ${isOpen ? 'scale-0 opacity-0' : 'scale-100 opacity-100 bg-black/80 backdrop-blur-xl hover:shadow-[0_0_20px_rgba(0,212,255,0.4)]'}`}
       >
         <div className="relative">
-          <Bot className="w-8 h-8 text-cyber-primary group-hover:scale-110 transition-transform" />
+          <Database className="w-8 h-8 text-cyber-primary group-hover:scale-110 transition-transform" />
           <span className="absolute -top-1 -right-1 flex h-3 w-3">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyber-secondary opacity-75"></span>
             <span className="relative inline-flex rounded-full h-3 w-3 bg-cyber-secondary"></span>
@@ -141,22 +138,20 @@ export const AiAssistant = () => {
         </div>
       </button>
 
-      {/* Chat Window */}
       <div 
         className={`fixed bottom-6 right-6 z-50 w-[380px] h-[600px] flex flex-col glass-panel rounded-2xl shadow-2xl transition-all duration-300 origin-bottom-right
           ${isOpen ? 'scale-100 opacity-100 translate-y-0' : 'scale-95 opacity-0 translate-y-10 pointer-events-none'}`}
       >
-        {/* Header */}
         <div className="p-4 border-b border-white/10 flex items-center justify-between bg-gradient-to-r from-cyber-primary/10 to-transparent">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-cyber-primary/20 rounded-lg border border-cyber-primary/30">
-              <Bot className="w-5 h-5 text-cyber-primary" />
+              <Database className="w-5 h-5 text-cyber-primary" />
             </div>
             <div>
-              <h3 className="font-bold text-white text-sm">Cipher AI</h3>
+              <h3 className="font-bold text-white text-sm">CyborgDB Sentry</h3>
               <div className="flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
-                <span className="text-[10px] text-gray-400 uppercase tracking-wider">Secure Channel</span>
+                <span className="text-[10px] text-gray-400 uppercase tracking-wider">CyborgDB Online</span>
               </div>
             </div>
           </div>
@@ -164,7 +159,7 @@ export const AiAssistant = () => {
             <button 
               onClick={handleDownload}
               className="p-1.5 hover:bg-white/10 rounded-lg text-gray-400 hover:text-white transition-colors"
-              title="Download Transcript"
+              title="Download Encrypted Log"
             >
               <Download className="w-4 h-4" />
             </button>
@@ -177,7 +172,6 @@ export const AiAssistant = () => {
           </div>
         </div>
 
-        {/* Messages */}
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
           {messages.map((msg) => (
             <div 
@@ -204,7 +198,7 @@ export const AiAssistant = () => {
 
           {messages.length === 1 && (
             <div className="grid gap-2 mt-4 animate-fade-in-up">
-              <p className="text-xs text-gray-500 mb-1 ml-1 uppercase">Recommended Actions</p>
+              <p className="text-xs text-gray-500 mb-1 ml-1 uppercase">CyborgDB Directives</p>
               {EXAMPLE_PROMPTS.map((prompt, i) => (
                 <button
                   key={i}
@@ -235,7 +229,6 @@ export const AiAssistant = () => {
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Input */}
         <div className="p-4 border-t border-white/10 bg-black/20">
           <form onSubmit={(e) => handleSend(e)} className="relative flex items-center gap-2">
             <button
@@ -249,7 +242,7 @@ export const AiAssistant = () => {
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask Cipher..."
+              placeholder="Query CyborgDB Neural Core..."
               className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-cyber-primary/50 focus:bg-white/10 transition-all placeholder-gray-500"
             />
             <button 
@@ -261,7 +254,7 @@ export const AiAssistant = () => {
             </button>
           </form>
           <div className="mt-2 text-[10px] text-center text-gray-600 flex items-center justify-center gap-1">
-            <Sparkles className="w-3 h-3" /> Encrypted Neural Core
+            <Sparkles className="w-3 h-3" /> Powered by CyborgDB
           </div>
         </div>
       </div>

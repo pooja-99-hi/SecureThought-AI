@@ -6,6 +6,13 @@ const SEVERITIES: ('Critical' | 'High' | 'Medium' | 'Low')[] = ['Critical', 'Hig
 
 const generateId = () => Math.random().toString(36).substr(2, 9);
 
+// ---------------------------------------------------------
+// 🔌 CYBORGDB CONNECTION
+// ---------------------------------------------------------
+// In a production environment, this key authorizes access to 
+// the Encrypted Vector Enclave.
+const CYBORGDB_API_KEY = process.env.VITE_CYBORGDB_API_KEY;
+
 const generateMockThreat = (): Threat => ({
   id: generateId(),
   title: `${THREAT_TYPES[Math.floor(Math.random() * THREAT_TYPES.length)]} detected on Node ${Math.floor(Math.random() * 50)}`,
@@ -31,7 +38,8 @@ class CyborgDBService {
     for (let i = 0; i < 50; i++) {
       this.threats.push(generateMockThreat());
     }
-    this.isConnected = true;
+    // Simulation of connection handshake
+    this.isConnected = true; 
   }
 
   // --- Auth Methods ---
@@ -45,7 +53,7 @@ class CyborgDBService {
       clearanceLevel: 5
     };
     this.currentUser = user;
-    this.addToHistory('LOGIN', `User ${username} authenticated via Biometric Handshake`, 'Success');
+    this.addToHistory('LOGIN', `User ${username} authenticated via CyborgDB Biometric Handshake`, 'Success');
     return user;
   }
 
@@ -100,7 +108,7 @@ class CyborgDBService {
   async search(query: string, mode: 'semantic' | 'hybrid' = 'semantic'): Promise<SearchResult[]> {
     await this.simulateLatency(450); 
     
-    this.addToHistory('SEARCH', `Encrypted Vector Search: "${mode}" mode`, 'Success', query);
+    this.addToHistory('SEARCH', `CyborgDB Encrypted Search: "${mode}" mode`, 'Success', query);
 
     // Mock results based on query
     const results = this.threats
@@ -110,7 +118,7 @@ class CyborgDBService {
         score: 0.85 + Math.random() * 0.14,
         threat: t,
         metadata: { source: 'CyborgDB Secure Index' },
-        matchReason: `Vector similarity: ${(0.85 + Math.random() * 0.14).toFixed(4)}`
+        matchReason: `CyborgDB Vector Similarity: ${(0.85 + Math.random() * 0.14).toFixed(4)}`
       }))
       .sort((a, b) => b.score - a.score);
 
